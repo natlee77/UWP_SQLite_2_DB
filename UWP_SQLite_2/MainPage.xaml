@@ -1,0 +1,100 @@
+﻿<Page
+    x:Class="UWP_SQLite_2.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_SQLite_2"
+    xmlns:models="using:DataAcceessLibrary.Models"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Background="#FF681F1F">
+
+
+
+    <Grid Margin="10" Background="#FFB9ACAC">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition  Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="10" Grid.Column="0"  Background="#FFD1BE95">
+            <Button x:Name="btnCreateCustomer" Click="btnCreateOrder_Click" Content="Create Customer" Grid.Row="1" Margin="10,10,10,10" HorizontalAlignment="Stretch"  FontSize="22" Background="#33936969"/>
+            <Button x:Name="btnCreateOrder" Click="btnCreateOrder_Click"         Content="Create New Order" Grid.Row="1" Margin="10,10,10,10" HorizontalAlignment="Stretch"  FontSize="22" Background="#33936969"/>
+            <Button x:Name="btnAllOrders"   Content="All Orders"  Grid.Row="1" Margin="10,10,10,10" HorizontalAlignment="Stretch" FontSize="22" Background="#33936969"/>
+            <Button x:Name="btnCompletedOrder"    Content="Completed Order"  Grid.Row="0" Margin="10,10,10,10" HorizontalAlignment="Stretch" FontSize="22" Background="#33936969" />
+            <Button x:Name="btnActiveOrder"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1" Margin="20,20,0,0"   Background="#FFEBEBD5">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <RelativePanel>
+                <ListView Name="InventoryList"
+                  SelectionMode="Single"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ScrollViewer.IsVerticalRailEnabled="True"
+                  ScrollViewer.VerticalScrollMode="Enabled"
+                  ScrollViewer.HorizontalScrollMode="Enabled"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  ScrollViewer.IsHorizontalRailEnabled="True"
+                  Margin="10">
+                    <ListView.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"  >
+                                <TextBlock Text="ID"        Margin="8,0"     Width="30"  TextAlignment="Center" Foreground="DarkRed" />
+                                <TextBlock Text="Order ID"   Margin="8,0"    Width="60"  TextAlignment="Center" Foreground="DarkRed" />
+                                <TextBlock Text="CustomerID" Margin="8,0"   Width="70"  TextAlignment="Center" Foreground="DarkRed"/>
+                                <TextBlock Text="Product ID"  Margin="8,0"   Width="70"  TextAlignment="Center" Foreground="DarkRed"/>
+                                <TextBlock Text="Quantity"   Margin="8,0"   Width="60"  TextAlignment="Center" Foreground="DarkRed" />
+                                <TextBlock Text="Description" Margin="8,0"  Width="250" TextAlignment="Center" Foreground="DarkRed" />
+                                <TextBlock Text="Status"     Margin="8,0"   Width="50"  TextAlignment="Center" Foreground="DarkRed" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.HeaderTemplate>
+
+                    <ListView x:Name="lvActiveOrders" >
+                        <!--ItemsSource="{Binding Source={}}-->
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Order"   >
+
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Name="OrderID"     Text="{x:Bind Id }"   Width="30" />
+                                    <TextBlock Name="CustomerID"  Text="{x:Bind CustomerId }"   Width="40" />
+                                    <TextBlock Name="ProductID"   Text="{x:Bind ProductId }"   Width="40" />
+                                    <TextBlock Name="Quantity"    Text="{x:Bind Quantity}"   Width="40" />
+                                    <TextBlock Name="Description" Text="{x:Bind Description }"   Width="40" />
+                                    <TextBlock Name="Status"      Text="{x:Bind Status }"  Width="300" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="lvCompletedOrders" >
+                        <!--ItemsSource="{Binding Source={}}"-->
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Order"  >
+
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Name="OrderID"     Text="{x:Bind Id }"   Width="30" />
+                                    <TextBlock Name="CustomerID"  Text="{x:Bind CustomerId }"   Width="30" />
+                                    <TextBlock Name="ProductID"   Text="{x:Bind ProductId }"   Width="30" />
+                                    <TextBlock Name="Quantity"    Text="{x:Bind Quantity}"   Width="30" />
+                                    <TextBlock Name="Description" Text="{x:Bind Description }"   Width="30" />
+                                    <TextBlock Name="Status"      Text="{x:Bind Status }"  Width="300" />
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ListView>
+            </RelativePanel>
+
+        </Grid>
+
+
+
+    </Grid>
+</Page>
