@@ -29,78 +29,102 @@ namespace UWP_SQLite_2
         private long _customerId;
         
         private IEnumerable<Order > orders { get; set; }
+        private IEnumerable<Customer> customers { get; set; }
         private long CustomerId { get; set; }
-
-
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            LoadOrdersAsync().GetAwaiter();//populera
-           
+            //LoadOrdersAsync().GetAwaiter();//populera
+            LoadAllCustomersAsync().GetAwaiter();
+
         }
 
 
-
+        #region Order
         private async Task LoadOrdersAsync()//kan ladda all orders när köra
         {
             orders = await SQLiteContext.GetOrders();
-             LoadActiveOrders();     //tabort await
-             LoadCompletedOrders();
+            LoadActiveOrders();     //tabort await
+            LoadCompletedOrders();
         }
-
-        private void  LoadActiveOrders()//dela ut orders 
+        private void LoadActiveOrders()//dela ut orders 
         {//listview
          // lvActiveOrders.ItemSourse = await DataAcceessLibrary.Data.SQLiteContext.CreateOrderAsync();//DataContext
-            lvActiveOrders.ItemsSource = orders.Where(i=> i.Status != "completed").ToList();
-        }  //async Task ändra till void
-        private void  LoadCompletedOrders()//dela ut orders 
+            lvActiveOrders.ItemsSource = orders.Where(i => i.Status != "completed").ToList();
+        }
+        private void LoadCompletedOrders()//dela ut orders 
         {//listview
-         // lvActiveOrders.ItemSourse = await DataAcceessLibrary.Data.SQLiteContext.CreateOrderAsync();//DataContext
             lvCompletedOrders.ItemsSource = orders.Where(i => i.Status == "completed").ToList();
         }
+        #endregion
+
+
+        #region Costumer
+        private async Task LoadCustomersAsync()// ladda kund in combobox
+        {
+            cmbCustomers.ItemsSource = await SQLiteContext.GetCustomerLastNames();
+
+        }
+        private async Task LoadAllCustomersAsync()// ladda i LISTview
+        {
+            lvAllCustomer.ItemsSource = await SQLiteContext.GetCustomers();
+        }
+        #endregion
 
 
         #region Button Service
-
         private async void btnCreateCustomer_Click(object sender, RoutedEventArgs e)
         {//om det finns kund hämta - om finns inte skapa kund
-
             //try
             //{
             //     await SQLiteContext.GetCustomers();
             //}
-            //var customer = new Customer("Nataliya");
-            CustomerId = await SQLiteContext.CreateCustomerAsync(new Customer {FirstName="Nataliya", LastName = "Lisjö" + Guid.NewGuid().ToString() });
-           
-          //++ CustomerId- for tillbacka Id  for att använda det
+            
+            _customerId = await SQLiteContext.CreateCustomerAsync(new Customer {FirstName="Nataliya", LastName = "Lisjö" + Guid.NewGuid().ToString(), Adress="Gatan" , City="Degerfors", PostCode=69335 }); // + Guid.NewGuid().ToString() 
+            _customerId = await SQLiteContext.CreateCustomerAsync (new Customer {FirstName = "Wiljam", LastName = "Berns" + Guid.NewGuid().ToString(), Adress = "Street", City = "Los Angeles", PostCode = 00000 });
+            //++ CustomerId- for tillbacka Id  for att använda det
+            await LoadAllCustomersAsync();
 
         }
-
         private async void btnCreateOrder_Click(object sender, RoutedEventArgs e)
         {
-            await SQLiteContext.CreateOrderAsync( new Order
+            await SQLiteContext.CreateOrderAsync(new Order
             {
-                CustomerId = _customerId,
-                Description = "Detta är order"
-            });
+            CustomerId = await SQLiteContext.GetCustomerIdByLastName(cmbCustomers.SelectedItem.ToString()),   
+            ProductId = 1,
+            Quantity = 2,
+            Description = "Detta är order"
+           
+            //CustomerId = customerId;
+            //ProductId = productId;
+            //Quantity = quantity;
+            //Description = description;
+            //Status = status;
+            //Created = created;
+
+        });
+
 
             await LoadOrdersAsync();//uppdatera list sortera ut
-
-
-
         }
+        private async void btnAllOrders_Click(object sender, RoutedEventArgs e)
+        {
+            await LoadOrdersAsync();
+        }
+        private async void btnAllCustomers_Click(object sender, RoutedEventArgs e)
+        {
+           await LoadAllCustomersAsync();
+        }
+        #endregion
 
-        #endregion 
-        //private async Task LoadCustomersAsync()
-        //{
-        //    cmbCustomers.ItemsSource = await SQLiteContext.GetCustomerLastNames();
-        //}       
         //private async Task LoadStatusAsync()
         //{
         //    cmbStatus.ItemsSource = await SettingsContext.GetStatus();
         //}
+
+
         //private void LoadActiveIssues()
         //{
         //    lvActiveOrders.ItemsSource = orders
@@ -109,28 +133,5 @@ namespace UWP_SQLite_2
         //        .Take(SettingsContext.GetMaxItemsCount())
         //        .ToList();
         //}
-
-
-
-
-
-
-
-        //private async void CreateOrder_Click(object sender, RoutedEventArgs e)
-        //{
-        //    await SQLiteContext.CreateOrderAsync(
-        //        new Order
-        //        {
-        //            Title = "CAS-" + Guid.NewGuid().ToString(),
-        //            Description = "Detta är ett ärende",
-        //            CustomerId = await SQLiteContext.GetCustomerIdByLastName(cmbCustomers.SelectedItem.ToString())
-        //        }
-        //    );
-
-        //    await GetOrdersAsync();
-        //}
-
-
-
     }
 }

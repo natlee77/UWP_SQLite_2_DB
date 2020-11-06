@@ -7,7 +7,6 @@
     City      TEXT   NOT NULL,
     PostCode  INTEGER    NOT NULL,
     Created   DATETIME   NOT NULL
-
     );
 
   CREATE TABLE IF NOT EXISTS Orders (
@@ -20,8 +19,8 @@
     Status      TEXT    NOT NULL,       
     
 
-    FOREIGE KEY (CostumerId) REFERENCES   Costumer(Id), 
-    FOREIGE KEY (ProductId)  REFERENCES   Product(Id), 
+    FOREIGN KEY (CostumerId) REFERENCES   Costumers(Id), 
+    FOREIGN KEY (ProductId)  REFERENCES   Products(Id), 
     );
 
   CREATE TABLE IF NOT EXISTS Products (
@@ -35,11 +34,11 @@
    
    CREATE TABLE IF NOT EXISTS Comments (
     Id         INTEGER    NOT NULL   PRIMARY KEY AUTOINCREMENT,         --PK
-    OrderId    INTEGER    NOT NULL  ,                                   --FK
+    OrderId    INTEGER    NOT NULL,                                     --FK
     Description TEXT      NOT NULL,
     Created    DATETIME   NOT NULL,
 
-    FOREIGE KEY (OrderId)  REFERENCES   Order(Id), 
+    FOREIGN KEY (OrderId)  REFERENCES   Orders(Id), 
    );
     
 

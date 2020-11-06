@@ -29,17 +29,43 @@ namespace DataAcceessLibrary.Data
             {
                 db.Open();
 
-                var query  = "CREATE TABLE IF NOT EXISTS Customers (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, FirstName TEXT NOT NULL, LastName TEXT NOT NULL, Adress TEXT NOT NULL, City TEXT NOT NULL, PostCode INTEGER NOT NULL, Created DATETIME NOT NULL );";
-                var query1 = "CREATE TABLE IF NOT EXISTS Orders   ( Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, CustomerId INTEGER  NOT NULL, ProductId INTEGER  NOT NULL, Quantity INTEGER NOT NULL, Description TEXT NOT NULL, Status TEXT  NOT NULL, Created DATETIME NOT NULL , FOREIGE KEY (CostumerId) REFERENCES Costumer(Id),  FOREIGE KEY (ProductId)  REFERENCES Product(Id));";
-                var query2 = "CREATE TABLE IF NOT EXISTS Products ( Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Description TEXT NOT NULL, Price  DECIMAL NOT NULL, Status TEXT  NOT NULL);  ";
-                var query3 = "CREATE TABLE IF NOT EXISTS Comments ( Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, OrderId INTEGER NOT NULL, Description TEXT  NOT NULL, Created DATETIME NOT NULL, FOREIGE KEY (OrderId) REFERENCES Order(Id));  ";
-               
-                var cmd  = new SqliteCommand(query, db);
-                var cmd1 = new SqliteCommand(query1, db);
-                var cmd2 = new SqliteCommand(query2, db);
-                var cmd3 = new SqliteCommand(query3, db);
-                await cmd.ExecuteNonQueryAsync();// förvänta ingen tillbacka
+                var query  = "CREATE TABLE IF NOT EXISTS Customers (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"+
+                    " FirstName TEXT NOT NULL," +
+                    " LastName TEXT NOT NULL," +
+                    " Adress TEXT NOT NULL," +
+                    " City TEXT NOT NULL," +
+                    " PostCode INTEGER NOT NULL," +
+                    " Created DATETIME NOT NULL );"+    
+                    
+                "CREATE TABLE IF NOT EXISTS Products ( Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                    " Name TEXT NOT NULL," +
+                    " Description TEXT NOT NULL," +
+                    " Price  DECIMAL NOT NULL," +
+                    " Status TEXT  NOT NULL);  "+
 
+                 "CREATE TABLE IF NOT EXISTS Orders   ( Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                    " CustomerId INTEGER NOT NULL," +
+                    " ProductId INTEGER  NOT NULL," +
+                    " Quantity INTEGER NOT NULL," +
+                    " Description TEXT NOT NULL," +
+                    " Status TEXT  NOT NULL," +
+                    " Created DATETIME NOT NULL ," +
+                    " FOREIGN KEY (CustomerId) REFERENCES Customers(Id)," +
+                    " FOREIGN KEY (ProductId)  REFERENCES Products(Id));" +
+
+                 "CREATE TABLE IF NOT EXISTS Comments ( Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                    " OrderId INTEGER NOT NULL," +
+                    " Description TEXT  NOT NULL," +
+                    " Created DATETIME NOT NULL," +
+                    " FOREIGN KEY (OrderId) REFERENCES Orders(Id));  ";
+                
+            
+
+                var cmd  = new SqliteCommand(query, db); //customers table
+                
+
+                await cmd.ExecuteNonQueryAsync();// förvänta ingen tillbacka
+               
                 db.Close();
             }
         }
@@ -344,9 +370,6 @@ namespace DataAcceessLibrary.Data
 
 
 
-
-
-
         public static async Task<IEnumerable<Order>> GetOrders()
         {
             var orders = new List<Order>();
@@ -391,7 +414,6 @@ namespace DataAcceessLibrary.Data
 
             return orders;
         }
-
         public static async Task<ICollection<Comment>> GetCommentsByOrderId(long orderid)
         {
             var comments = new List<Comment>();
@@ -482,24 +504,26 @@ namespace DataAcceessLibrary.Data
                                                                                                    //UPDATE table1 SET d = 55 WHERE a = 1;//INSERT INTO table1  VALUES (5, ‘Сейтаридис’, ‘Грек’, 18);
 
 
-                var cmd = new SqliteCommand(query, db);
-
-               
-                var result = await cmd.ExecuteNonQueryAsync();
-
-
-                
-
-                //  UPDATE table_name
-                //SET column1 = value1, column2 = value2...., columnN = valueN
-                //WHERE[condition];
-
+                var cmd = new SqliteCommand(query, db);               
+                var result = await cmd.ExecuteScalarAsync();
                 db.Close();
             }
            
-        }                 
+        }
+        /*INSERT INTO Customers VALUES (@Name,@Created)
+            cmd.ExecuterScalarAsync():
 
-        
+        INSERT INTO Orders VALUES (@    ,@     )
+            cmd.ExecuterScalarAsync();
+
+        INSERT INTO Comments VALUES (@    ,@     )
+              cmd.ExecuteNonQueryAsync);// no t tillbacka
+
+        ms sql insert get id//
+        INSERT INTO table_name OUTPUT Inserted.Id VALUES()// for not identity columns such GUID
+               cmd.ExecuterScalarAsync();
+        //då behöver inte extra förfråga*/
+
         #endregion
 
     }
