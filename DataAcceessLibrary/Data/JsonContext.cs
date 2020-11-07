@@ -14,7 +14,7 @@ namespace DataAcceessLibrary.Data
     {//i main-- JsonService.WriteToFileCorrect(filepath, new Person("Nataliya", "Lisjo", 19, "Degefors"));
        
         
-
+        //tagit from  .Net sista version--- klagat på using del - low version
         public static class JsonService
         {
            

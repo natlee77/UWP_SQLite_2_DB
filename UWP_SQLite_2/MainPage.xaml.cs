@@ -96,9 +96,10 @@ namespace UWP_SQLite_2
             //++ CustomerId- for tillbacka Id  for att använda det
             await LoadAllCustomersAsync();
         }
-        private async void btnCreateOrder_Click(object sender, RoutedEventArgs e)
+        private async void btnCreateOrder_Click(object sender, RoutedEventArgs e) // ???? har problem i den del fel ---Object reference not set to an instance of an object.'
+
         {
-           _orderId= await SQLiteContext.CreateOrderAsync(new Order
+            _orderId = await SQLiteContext.CreateOrderAsync(new Order
            {CustomerId = await SQLiteContext.GetCustomerIdByLastName(cmbCustomers.SelectedItem.ToString()),   
                ProductId = 45,
                Quantity = 2,
