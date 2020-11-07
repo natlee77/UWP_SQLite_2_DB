@@ -483,17 +483,54 @@ namespace DataAcceessLibrary.Data
             return orders;
         }
 
+
+
+
+        public static async Task<string> GetFileContentJsonAsync(string fileName)//hämta innerhål
+        {//använda standart windows catalog
+
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;//standart windows catalog
+        
+            StorageFile file = await storageFolder.GetFileAsync("settings.json");//hämta fil
+
+            //läsa fil innerhål:
+            return await FileIO.ReadTextAsync(file);//return direct , ! spara/hämta text from file
+
+        }
+
         #endregion
 
         #region Urdate Metods
 
 
+        public static async Task UpdateOrderAsync( Order order)
+        {
+       
+            using (var db = new SqliteConnection(_dbpath))
+            {
+                db.Open();
+ 
+                var query = "INSERT INTO Orders SET Inserted.Id VALUES(@CustomerId, @ProductId, @Quantity, @Description, @Status, @Created)";
+                var cmd = new SqliteCommand(query, db);
 
+                cmd.Parameters.AddWithValue("@CustomerId", order.CustomerId);
+                cmd.Parameters.AddWithValue("@ProductId",  order.ProductId);
+                cmd.Parameters.AddWithValue("@Quantity",   order.Quantity);
+                cmd.Parameters.AddWithValue("@Description", order.Description);
+                cmd.Parameters.AddWithValue("@Status", "update");
+                cmd.Parameters.AddWithValue("@Created", DateTime.Now);
+              
+
+                cmd.CommandText = "SELECT last_insert_rowid()"; //retunera ID
+                await cmd.ExecuteScalarAsync();
+
+                db.Close();
+            }                  
+        }
 
 
         public static async Task UpdateOrderByStatus()
-        {
-             
+        {           
 
             using (var db = new SqliteConnection(_dbpath))
             {
@@ -502,7 +539,6 @@ namespace DataAcceessLibrary.Data
                 var query = "UPDATE Orders SET  Status = aktive, Status = completed WHERE  Id = @Id"; //UPDATE table1 SET a = 6 WHERE d = 18 AND c = ‘drdhк’;
                                                                                                    // UPDATE table SET column_1 = new_value_1,  column_2 = new_value_2  WHERE    search_condition ORDER column_or_expression LIMIT row_count OFFSET offset;
                                                                                                    //UPDATE table1 SET d = 55 WHERE a = 1;//INSERT INTO table1  VALUES (5, ‘Сейтаридис’, ‘Грек’, 18);
-
 
                 var cmd = new SqliteCommand(query, db);               
                 var result = await cmd.ExecuteScalarAsync();

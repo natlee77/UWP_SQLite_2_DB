@@ -18,4 +18,17 @@
 
   = "SELECT last_insert_rowid()"
   = SELECT Id FROM Customers WHERE LastName=@LastName
-    
+   
+   /*INSERT INTO Customers VALUES (@Name,@Created)
+            cmd.ExecuterScalarAsync():
+
+        INSERT INTO Orders VALUES (@    ,@     )
+            cmd.ExecuterScalarAsync();
+
+        INSERT INTO Comments VALUES (@    ,@     )
+              cmd.ExecuteNonQueryAsync);// no t tillbacka
+
+        ms sql insert get id//
+        INSERT INTO table_name OUTPUT Inserted.Id VALUES()// for not identity columns such GUID
+               cmd.ExecuterScalarAsync();
+        //då behöver inte extra förfråga*/

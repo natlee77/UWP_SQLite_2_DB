@@ -33,7 +33,9 @@ namespace UWP_SQLite_2
 
 
             //++skapa DB , skapa tabelom de inte existeras, gör det första när köra app
-            DataAcceessLibrary.Data.SQLiteContext.UseSqlite();  
+            DataAcceessLibrary.Data.SQLiteContext.UseSqlite();
+
+            DataAcceessLibrary.Data.SettingsContext.GetSettingsInformation();
         }
 
         /// <summary>

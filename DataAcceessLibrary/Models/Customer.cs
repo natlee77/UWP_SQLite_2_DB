@@ -35,11 +35,11 @@ namespace DataAcceessLibrary.Models
         public DateTime Created { get; set; }
 
 
-        public string Name => "@ {FirstName } {LastName} ";
-
-
-
        
+        public string Name => $"{ FirstName }  {LastName}";
+
+
+
         public virtual ICollection<Customer> Customers { get; set; }
     }
 }

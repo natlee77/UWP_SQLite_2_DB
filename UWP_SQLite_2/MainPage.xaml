@@ -6,7 +6,7 @@
     xmlns:models="using:DataAcceessLibrary.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Background="#FF681F1F">
+    mc:Ignorable="d" Background="#FF681F1F" FocusVisualSecondaryBrush="#99F3EBEB">
 
 
 
@@ -18,14 +18,11 @@
         <StackPanel Margin="10,10,10,10" Grid.Column="0" Background="#FFD1BE95"  >
             <Button x:Name="btnCreateCustomer" Click="btnCreateCustomer_Click" Content="Create Customer"  Margin="10,10,10,10" HorizontalAlignment="Stretch"    FontSize="22" Background="#33936969" FontWeight="Normal" FontStyle="Normal"/>
             <Button x:Name="btnAllCustomers"  Click="btnAllCustomers_Click" Content="All Customers"   Margin="10,10,10,10" HorizontalAlignment="Stretch" FontSize="22" Background="#33936969" />
-            <!--<Button x:Name="btnCreateOrder"    Click="btnCreateOrder_Click" Content="Create New Order" Margin="10,10,10,10" HorizontalAlignment="Left"  FontSize="22" Background="#33936969"/>-->
-            <!--<Button x:Name="btnAllOrders"      Click="btnAllOrders_Click"   Content="All Orders"      Margin="10,10,10,10" HorizontalAlignment="Left" FontSize="22" Background="#33936969"/>-->
+            <ComboBox x:Name="cmbCustomers" PlaceholderText="Select Customer"  Margin="10,10,10,10" Background="#33936969"  FontSize="18" HorizontalAlignment="Stretch" FocusVisualSecondaryBrush="#99F3DADA" />
 
-            <ComboBox x:Name="cmbCustomers" PlaceholderText="Select Customer"  Margin="10,10,10,10" Background="#33936969"  FontSize="18" IsEditable="True" HorizontalAlignment="Left" />
-            <ComboBox x:Name="cmbStatus" PlaceholderText="Select Order status"  Margin="10,10,10,10" Background="#33936969" FontSize="18" HorizontalAlignment="Left" />
-
-            <TextBlock Text="Active Orders"     Margin="10,10,10,10" FontSize="18" FontStyle="Italic"/>
-            <TextBlock Text="Completed Orders"  Margin="10,10,10,10" FontSize="18" FontStyle="Italic"/>
+            <Button x:Name="btnCreateOrder"    Click="btnCreateOrder_Click" Content="Create New Order" Margin="10,10,10,10" HorizontalAlignment="Stretch"  FontSize="22" Background="#33936969"/>
+            <Button x:Name="btnAllOrders"      Click="btnAllOrders_Click"   Content="All Orders"      Margin="10,10,10,10" HorizontalAlignment="Stretch" FontSize="22" Background="#33936969"/>
+            <ComboBox x:Name="cmbStatus" PlaceholderText="Select Order status"  Margin="10,10,10,10" Background="#33936969" FontSize="18" HorizontalAlignment="Stretch" FocusVisualSecondaryBrush="#99E8C6C6" />
         </StackPanel>
 
         <Grid Margin="6,5,5,0"   Background="#FFB39C7D" BorderThickness="2,2,2,2"  FocusVisualSecondaryBrush="#99000000" RequestedTheme="Default" Grid.Column="1">
@@ -63,7 +60,7 @@
 
 
                     <StackPanel>
-
+                        <TextBlock Text="Active Orders"     Margin="10,10,10,10" FontSize="18" FontStyle="Italic"/>
                         <ListView x:Name="lvActiveOrders" >
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:Order"   >
@@ -74,7 +71,7 @@
                                         <TextBlock Name="Quantity"    Text="{x:Bind Quantity}"   Width="70" />
                                         <TextBlock Name="Description" Text="{x:Bind Description }"   Width="140" />
                                         <TextBlock Name="Status"      Text="{x:Bind Status }"  Width="50" />
-                                        <TextBlock     Text="{x:Bind Created}"  Width="70" />
+                                        <TextBlock     Text="{x:Bind Created}"  Width="90" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -82,7 +79,7 @@
                     </StackPanel>
 
                     <StackPanel>
-
+                        <TextBlock Text="Completed Orders"  Margin="10,10,10,10" FontSize="18" FontStyle="Italic"/>
                         <ListView x:Name="lvCompletedOrders" >
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:Order"  >
@@ -91,28 +88,28 @@
                                         <TextBlock    Text="{x:Bind CustomerId }"   Width=" 70" />
                                         <TextBlock    Text="{x:Bind ProductId }"   Width="70" />
                                         <TextBlock    Text="{x:Bind Quantity}"   Width="70" />
-                                        <TextBlock    Text="{x:Bind Description }"   Width="140" />
+                                        <TextBlock    Text="{x:Bind Description }"   Width="150" />
                                         <TextBlock    Text="{x:Bind Status }"  Width="50" />
-                                        <TextBlock    Text="{x:Bind Created}"  Width="70" />
+                                        <TextBlock    Text="{x:Bind Created}"  Width="110" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </StackPanel>
+                    
                     <StackPanel>
-
-
+                        <TextBlock Text="All Costumer"  Margin="10,10,10,10" FontSize="18" FontStyle="Italic"/>
                         <ListView x:Name="lvAllCustomer"  >
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:Customer"  >
                                     <StackPanel Orientation="Horizontal" >
                                         <TextBlock     Text="{x:Bind Id }"        Width="30"  />
                                         <TextBlock     Text="{x:Bind FirstName }" Width="70" />
-                                        <TextBlock     Text="{x:Bind LastName }"  Width="70" />
+                                        <TextBlock     Text="{x:Bind LastName }"  Width="300" />
                                         <TextBlock     Text="{x:Bind Adress}"     Width="90" />
                                         <TextBlock     Text="{x:Bind City }"      Width="90" />
                                         <TextBlock     Text="{x:Bind PostCode}"   Width="70" />
-                                        <TextBlock     Text="{x:Bind Created}"    Width="90" />
+                                        <TextBlock     Text="{x:Bind Created}"    Width="110" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

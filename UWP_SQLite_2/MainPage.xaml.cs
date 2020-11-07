@@ -27,17 +27,19 @@ namespace UWP_SQLite_2
     public sealed partial class MainPage : Page
     {
         private long _customerId;
-        
+        private long _orderId;
+        private long CustomerId { get; set; }
         private IEnumerable<Order > orders { get; set; }
         private IEnumerable<Customer> customers { get; set; }
-        private long CustomerId { get; set; }
+        
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            //LoadOrdersAsync().GetAwaiter();//populera
+            LoadOrdersAsync().GetAwaiter();//populera
             LoadAllCustomersAsync().GetAwaiter();
+            LoadStatusAsync().GetAwaiter();
 
         }
 
@@ -45,27 +47,34 @@ namespace UWP_SQLite_2
         #region Order
         private async Task LoadOrdersAsync()//kan ladda all orders när köra
         {
-            orders = await SQLiteContext.GetOrders();
-            LoadActiveOrders();     //tabort await
-            LoadCompletedOrders();
+            orders = await SQLiteContext.GetOrders(); //hämta alla
+            LoadActiveOrders();                       
+            LoadClosedOrders();
+
         }
-        private void LoadActiveOrders()//dela ut orders 
-        {//listview
-         // lvActiveOrders.ItemSourse = await DataAcceessLibrary.Data.SQLiteContext.CreateOrderAsync();//DataContext
-            lvActiveOrders.ItemsSource = orders.Where(i => i.Status != "completed").ToList();
+        private async Task  OrderUpdateAsync()
+        {
+            await SQLiteContext.UpdateOrderAsync(new Order());
         }
-        private void LoadCompletedOrders()//dela ut orders 
+        private void LoadActiveOrders()
+        {
+            lvActiveOrders.ItemsSource = orders
+                .Where(i => i.Status != "closed")
+                .OrderByDescending(i => i.Created)
+                .Take(SettingsContext.GetMaxItemsCount())
+                .ToList();
+        }
+        private void LoadClosedOrders()//dela ut orders 
         {//listview
-            lvCompletedOrders.ItemsSource = orders.Where(i => i.Status == "completed").ToList();
+            lvCompletedOrders.ItemsSource = orders.Where(i => i.Status == "closed").ToList();
         }
         #endregion
 
 
         #region Costumer
-        private async Task LoadCustomersAsync()// ladda kund in combobox
+        private async Task LoadCustomersNameAsync()// ladda kund in combobox
         {
             cmbCustomers.ItemsSource = await SQLiteContext.GetCustomerLastNames();
-
         }
         private async Task LoadAllCustomersAsync()// ladda i LISTview
         {
@@ -82,31 +91,28 @@ namespace UWP_SQLite_2
             //     await SQLiteContext.GetCustomers();
             //}
             
-            _customerId = await SQLiteContext.CreateCustomerAsync(new Customer {FirstName="Nataliya", LastName = "Lisjö" + Guid.NewGuid().ToString(), Adress="Gatan" , City="Degerfors", PostCode=69335 }); // + Guid.NewGuid().ToString() 
-            _customerId = await SQLiteContext.CreateCustomerAsync (new Customer {FirstName = "Wiljam", LastName = "Berns" + Guid.NewGuid().ToString(), Adress = "Street", City = "Los Angeles", PostCode = 00000 });
+            _customerId = await SQLiteContext.CreateCustomerAsync(new Customer {FirstName="Nataliya", LastName = "Lisjö " + Guid.NewGuid().ToString(), Adress="Gatan" , City="Degerfors", PostCode=69335 }); // + Guid.NewGuid().ToString() 
+            _customerId = await SQLiteContext.CreateCustomerAsync (new Customer {FirstName = "Wiljam", LastName = "Berns " + Guid.NewGuid().ToString(), Adress = "Street", City = "Los Angeles", PostCode = 00000 });
             //++ CustomerId- for tillbacka Id  for att använda det
             await LoadAllCustomersAsync();
-
         }
         private async void btnCreateOrder_Click(object sender, RoutedEventArgs e)
         {
-            await SQLiteContext.CreateOrderAsync(new Order
+           _orderId= await SQLiteContext.CreateOrderAsync(new Order
+           {CustomerId = await SQLiteContext.GetCustomerIdByLastName(cmbCustomers.SelectedItem.ToString()),   
+               ProductId = 45,
+               Quantity = 2,
+               Description = "Detta är order",
+               Status="new"
+           });            
+            _orderId = await SQLiteContext.CreateOrderAsync(new Order
             {
-            CustomerId = await SQLiteContext.GetCustomerIdByLastName(cmbCustomers.SelectedItem.ToString()),   
-            ProductId = 1,
-            Quantity = 2,
-            Description = "Detta är order"
-           
-            //CustomerId = customerId;
-            //ProductId = productId;
-            //Quantity = quantity;
-            //Description = description;
-            //Status = status;
-            //Created = created;
-
-        });
-
-
+                CustomerId = await SQLiteContext.GetCustomerIdByLastName(cmbCustomers.SelectedItem.ToString()),
+                ProductId = 654,
+                Quantity = 2,
+                Description = "Detta är order",
+                 Status = "new"
+            });
             await LoadOrdersAsync();//uppdatera list sortera ut
         }
         private async void btnAllOrders_Click(object sender, RoutedEventArgs e)
@@ -119,19 +125,21 @@ namespace UWP_SQLite_2
         }
         #endregion
 
-        //private async Task LoadStatusAsync()
-        //{
-        //    cmbStatus.ItemsSource = await SettingsContext.GetStatus();
-        //}
 
+        #region Status
+        private async Task LoadStatusAsync()
+        {
+            cmbStatus.ItemsSource = await SettingsContext.GetStatus();
+            await OrderUpdateAsync();
+            await LoadOrdersAsync();//uppdatera list sortera ut
+        }
 
-        //private void LoadActiveIssues()
-        //{
-        //    lvActiveOrders.ItemsSource = orders
-        //        .Where(i => i.Status != "closed")
-        //        .OrderByDescending(i => i.Created)
-        //        .Take(SettingsContext.GetMaxItemsCount())
-        //        .ToList();
-        //}
+        #endregion
+      
     }
 }
+//private void LoadActiveOrders()//dela ut orders 
+//{//listview
+// // lvActiveOrders.ItemSourse = await DataAcceessLibrary.Data.SQLiteContext.CreateOrderAsync();//DataContext
+//    lvActiveOrders.ItemsSource = orders.Where(i => i.Status != "closed").ToList();
+//}
