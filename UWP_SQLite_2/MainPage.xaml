@@ -8,120 +8,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Background="#FF681F1F" FocusVisualSecondaryBrush="#99F3EBEB">
 
+    <Grid  Margin="10" Background="#FFB9ACAC">
+        <NavigationView  x:Name="NavView" Loaded="NavView_Loaded" SelectionChanged="NavView_SelectionChanged" Background="#FFB7B697" Margin="10,10,10,10"  >
+            <NavigationView.MenuItems  >
+                <NavigationViewItem Icon="List" Content="Order" Tag="OrderPage" FontSize="18" Background="#FFD1C4A2" Margin="10,10,10,10" />
+                <NavigationViewItem Icon="People" Content="Customers" Tag="CustomerPage" FontSize="18" Background="#FFD1C4A2" Margin="10,10,10,10"  />
+                <NavigationViewItem Icon="List" Content="Product" Tag="ProductPage" FontSize="18" Background="#FFD1C4A2" Margin="10,10,10,10" />
+            </NavigationView.MenuItems>
 
+           <ScrollViewer >
+                <Frame x:Name="ContentFrame" />
+            </ScrollViewer>
 
-    <Grid Margin="10" Background="#FFB9ACAC">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="8*"/>
-            <ColumnDefinition  Width="29*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Margin="10,10,10,10" Grid.Column="0" Background="#FFD1BE95"  >
-            <Button x:Name="btnCreateCustomer" Click="btnCreateCustomer_Click" Content="Create Customer"  Margin="10,10,10,10" HorizontalAlignment="Stretch"    FontSize="22" Background="#33936969" FontWeight="Normal" FontStyle="Normal"/>
-            <Button x:Name="btnAllCustomers"  Click="btnAllCustomers_Click" Content="All Customers"   Margin="10,10,10,10" HorizontalAlignment="Stretch" FontSize="22" Background="#33936969" />
-            <ComboBox x:Name="cmbCustomers" PlaceholderText="Select Customer"  Margin="10,10,10,10" Background="#33936969"  FontSize="18" HorizontalAlignment="Stretch" FocusVisualSecondaryBrush="#99F3DADA" />
-
-            <Button x:Name="btnCreateOrder"    Click="btnCreateOrder_Click" Content="Create New Order" Margin="10,10,10,10" HorizontalAlignment="Stretch"  FontSize="22" Background="#33936969"/>
-            <Button x:Name="btnAllOrders"      Click="btnAllOrders_Click"   Content="All Orders"      Margin="10,10,10,10" HorizontalAlignment="Stretch" FontSize="22" Background="#33936969"/>
-            <ComboBox x:Name="cmbStatus" PlaceholderText="Select Order status"  Margin="10,10,10,10" Background="#33936969" FontSize="18" HorizontalAlignment="Stretch" FocusVisualSecondaryBrush="#99E8C6C6" />
-        </StackPanel>
-
-        <Grid Margin="6,5,5,0"   Background="#FFB39C7D" BorderThickness="2,2,2,2"  FocusVisualSecondaryBrush="#99000000" RequestedTheme="Default" Grid.Column="1">
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <RelativePanel>
-                <ListView Name="InventoryList"
-                  SelectionMode="Single"
-                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ScrollViewer.IsVerticalRailEnabled="True"
-                  ScrollViewer.VerticalScrollMode="Enabled"
-                  ScrollViewer.HorizontalScrollMode="Enabled"
-                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                  ScrollViewer.IsHorizontalRailEnabled="True"
-                  Margin="10">
-                    <ListView.HeaderTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal"  >
-                                <!--<TextBlock Text="ID"        Margin="8,0"     Width="30"  TextAlignment="Center" Foreground="DarkRed" />-->
-                                <!--<TextBlock Text="Order ID"   Margin="8,0"    Width="60"  TextAlignment="Center" Foreground="DarkRed" />
-                                <TextBlock Text="CustomerID" Margin="8,0"   Width="70"  TextAlignment="Center" Foreground="DarkRed"/>
-                                <TextBlock Text="Product ID"  Margin="8,0"   Width="70"  TextAlignment="Center" Foreground="DarkRed"/>
-                                <TextBlock Text="Quantity"   Margin="8,0"   Width="60"  TextAlignment="Center" Foreground="DarkRed" />
-                                <TextBlock Text="Description" Margin="8,0"  Width="250" TextAlignment="Center" Foreground="DarkRed" />
-                                <TextBlock Text="Status"     Margin="8,0"   Width="50"  TextAlignment="Center" Foreground="DarkRed" />-->
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.HeaderTemplate>
-
-
-                    <StackPanel>
-                        <TextBlock Text="Active Orders"     Margin="10,10,10,10" FontSize="18" FontStyle="Italic"/>
-                        <ListView x:Name="lvActiveOrders" >
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="models:Order"   >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock Name="OrderID"     Text="{x:Bind Id }"   Width="30" />
-                                        <TextBlock Name="CustomerID"  Text="{x:Bind CustomerId }"   Width="70" />
-                                        <TextBlock Name="ProductID"   Text="{x:Bind ProductId }"   Width="70" />
-                                        <TextBlock Name="Quantity"    Text="{x:Bind Quantity}"   Width="70" />
-                                        <TextBlock Name="Description" Text="{x:Bind Description }"   Width="140" />
-                                        <TextBlock Name="Status"      Text="{x:Bind Status }"  Width="50" />
-                                        <TextBlock     Text="{x:Bind Created}"  Width="90" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-
-                    <StackPanel>
-                        <TextBlock Text="Completed Orders"  Margin="10,10,10,10" FontSize="18" FontStyle="Italic"/>
-                        <ListView x:Name="lvCompletedOrders" >
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="models:Order"  >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock    Text="{x:Bind Id }"   Width="30" />
-                                        <TextBlock    Text="{x:Bind CustomerId }"   Width=" 70" />
-                                        <TextBlock    Text="{x:Bind ProductId }"   Width="70" />
-                                        <TextBlock    Text="{x:Bind Quantity}"   Width="70" />
-                                        <TextBlock    Text="{x:Bind Description }"   Width="150" />
-                                        <TextBlock    Text="{x:Bind Status }"  Width="50" />
-                                        <TextBlock    Text="{x:Bind Created}"  Width="110" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                    
-                    <StackPanel>
-                        <TextBlock Text="All Costumer"  Margin="10,10,10,10" FontSize="18" FontStyle="Italic"/>
-                        <ListView x:Name="lvAllCustomer"  >
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="models:Customer"  >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock     Text="{x:Bind Id }"        Width="30"  />
-                                        <TextBlock     Text="{x:Bind FirstName }" Width="70" />
-                                        <TextBlock     Text="{x:Bind LastName }"  Width="300" />
-                                        <TextBlock     Text="{x:Bind Adress}"     Width="90" />
-                                        <TextBlock     Text="{x:Bind City }"      Width="90" />
-                                        <TextBlock     Text="{x:Bind PostCode}"   Width="70" />
-                                        <TextBlock     Text="{x:Bind Created}"    Width="110" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-
-                </ListView>
-            </RelativePanel>
-
-        </Grid>
-
-
-
+        </NavigationView>   
     </Grid>
+
+   
 </Page>

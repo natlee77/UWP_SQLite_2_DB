@@ -147,7 +147,7 @@ namespace DataAcceessLibrary.Data
         }
 
 
-        public static async Task<long> CreateProductAsync(Product product)//done
+        public static async Task<long> CreateProductAsync(Product product)
         {
             long id = 0;
 
@@ -484,6 +484,39 @@ namespace DataAcceessLibrary.Data
         }
 
 
+
+
+        //product
+        public static async Task<IEnumerable<Product>> GetProducts()//drop down lista med alla ;
+        {
+            var products = new List<Product>();
+
+            using (var db = new SqliteConnection(_dbpath)) //stoppa in värde
+            {
+                db.Open();
+
+                var query = "SELECT * FROM Products"; // hämta alla  // kan ID , Name
+                var cmd = new SqliteCommand(query, db);
+
+                var result = await cmd.ExecuteReaderAsync();//förvänta info tillbacka
+
+                if (result.HasRows)
+                {
+                    while (result.Read())
+                    {
+                        products.Add(new Product(result.GetInt64(0),  //Id
+                            result.GetString(1),                        //Name
+                            result.GetString(2),                        //description
+                            result.GetInt32(3),                        //price
+                            result.GetString(4)));                    //status                            
+                    }
+                }
+                
+                db.Close();
+            }
+
+            return products;
+        }
 
 
         public static async Task<string> GetFileContentJsonAsync(string fileName)//hämta innerhål

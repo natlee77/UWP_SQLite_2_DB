@@ -18,7 +18,7 @@ namespace DataAcceessLibrary.Data
             //var json= await FileIO.ReadTextAsync(settingsFile);
             //var settings = JsonConvert.DeserializeObject<Settings>(json);
 
-            var settingsFile = "{\"status\":   [\"new\", \"active\", \"closed\"],   \"maxItemsCount\": 4}";
+            var settingsFile = "{\"status\":   [\"new\", \"active\", \"closed\"],   \"maxItemsCount\": 6}";
            
             _settings = JsonConvert.DeserializeObject<Settings>(settingsFile);
         }
