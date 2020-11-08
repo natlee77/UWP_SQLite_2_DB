@@ -78,6 +78,13 @@ namespace UWP_SQLite_2
         }
 
         #endregion
+
+     
+
+        private async void btnAddProduct_Click(object sender, RoutedEventArgs e)
+        {
+            await SQLiteContext.CreateProductAsync(new Product());  //nån fel här
+        }
     }
 }
 
